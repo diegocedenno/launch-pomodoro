@@ -4,7 +4,9 @@
 >
 > Un pomodoro como lanzamiento de cohete: enfoque en la plataforma, cuenta regresiva T-10, despegue y descanso en órbita alrededor de Plutón.
 
-![launch-pomodoro preview](docs/preview.png)
+**[Live demo · Demo en vivo →](https://diegocedenno.github.io/launch-pomodoro/)**
+
+[![launch-pomodoro preview](docs/preview.png)](https://diegocedenno.github.io/launch-pomodoro/)
 
 **[English](#english)** · **[Español](#español)**
 
