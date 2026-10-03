@@ -21,6 +21,7 @@
 - The break is spent in orbit: the rocket makes exactly one lap around Pluto, then returns to the pad for the next mission. Every fourth mission earns a long break.
 - **Skip** never cuts a phase short: it jumps straight to that phase's T-10, so the ending always plays.
 - Focus, break and long-break lengths are configurable. Optional sound (off by default) and today's stats — focus sessions, focus minutes and the four-mission cycle — are saved per date in `localStorage`.
+- A switch in the header flips between dark and light mode: the same launch site redrawn as a star chart on paper, the white rocket held by an ink outline. The choice is remembered and shared across the Plutón series.
 
 ### What makes it technically interesting
 
@@ -59,6 +60,7 @@ It also works as-is on GitHub Pages.
 - El descanso se pasa en órbita: el cohete da exactamente una vuelta a Plutón y vuelve a la plataforma para la siguiente misión. Cada cuarta misión trae un descanso largo.
 - **Saltar** nunca corta una fase en seco: la lleva directamente a su T-10, así el final siempre se ve.
 - Las duraciones de enfoque, descanso y descanso largo son configurables. El sonido es opcional (apagado por defecto) y las estadísticas de hoy —enfoques, minutos de enfoque y el ciclo de cuatro misiones— se guardan por fecha en `localStorage`.
+- Un interruptor en la cabecera alterna entre modo oscuro y claro: la misma plataforma de lanzamiento redibujada como carta estelar sobre papel, con el cohete blanco sostenido por un contorno de tinta. La elección se recuerda y se comparte entre los proyectos de la serie Plutón.
 
 ### Qué lo hace interesante técnicamente
 
