@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>launch-pomodoro — pomodoro de lanzamiento</title>
+  <meta name="description" content="Pomodoro como cuenta regresiva de lanzamiento: enfoque, secuencia T-10, despegue del cohete y descanso en órbita.">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/tokens.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="assets/starfield.js"></script>
+  <script defer src="js/timer.js"></script>
+  <script defer src="js/sound.js"></script>
+  <script defer src="js/scene.js"></script>
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <div class="page">
+    <header class="page-head">
+      <a class="brand" href="./" aria-label="launch-pomodoro, inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="13" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="1.5 3.2" stroke-linecap="round"/>
+          <path d="M13.9 22.5 C13.9 24.8 15.1 26.3 16 28 C16.9 26.3 18.1 24.8 18.1 22.5 Z" fill="#ff7a3d"/>
+          <path d="M11.6 16.5 L8.4 21.6 V23.2 L11.8 21.2 Z M20.4 16.5 L23.6 21.6 V23.2 L20.2 21.2 Z" fill="#c9a27e"/>
+          <path d="M16 5 C19.6 8.6 20.6 12.8 20.6 17 V21 C20.6 21.6 20.2 22 19.6 22 H12.4 C11.8 22 11.4 21.6 11.4 21 V17 C11.4 12.8 12.4 8.6 16 5 Z" fill="#f4f6f8"/>
+          <circle cx="16" cy="14.2" r="2" fill="#161b22"/>
+        </svg>
+        launch-pomodoro
+      </a>
+      <p class="console" id="status" role="status">fase: <b id="status-phase">en espera</b><span aria-hidden="true"> · <span id="status-time">T−25:00</span></span></p>
+    </header>
+
+    <main class="layout">
+      <h1 class="sr-only">launch-pomodoro: temporizador pomodoro con cuenta regresiva de lanzamiento</h1>
+
+      <section class="stage" id="stage" aria-label="Plataforma de lanzamiento">
+        <svg class="scene" id="scene" viewBox="0 0 368 320" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Cohete en la plataforma de lanzamiento" data-view="pad">
+          <defs>
+            <clipPath id="pluto-clip"><circle cx="60" cy="60" r="52"/></clipPath>
+            <radialGradient id="pluto-light" cx="36%" cy="30%" r="80%">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+              <stop offset="0.55" stop-color="#ffffff" stop-opacity="0"/>
+              <stop offset="1" stop-color="#0d1117" stop-opacity="0.5"/>
+            </radialGradient>
+            <clipPath id="above-pad"><rect x="-2000" y="-2000" width="5000" height="2273"/></clipPath>
+            <linearGradient id="ground-fade" x1="0" x2="1" y1="0" y2="0">
+              <stop offset="0" stop-color="#30363d" stop-opacity="0"/>
+              <stop offset="0.2" stop-color="#30363d"/>
+              <stop offset="0.8" stop-color="#30363d"/>
+              <stop offset="1" stop-color="#30363d" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Destino: Plutón y la órbita de descanso. En la plataforma se ve lejos; en órbita, cerca. -->
+          <g class="pluto">
+            <ellipse class="orbit-dashed pluto-orbit" rx="170" ry="76"/>
+            <g transform="translate(-54 -54) scale(0.9)">
+              <circle cx="60" cy="60" r="52" fill="#c9a27e"/>
+              <g clip-path="url(#pluto-clip)">
+                <path d="M2 70 C18 60 30 74 44 68 C52 65 54 76 46 84 C34 94 14 92 2 86 Z" fill="#8a6548" opacity="0.75"/>
+                <path d="M22 18 C40 6 80 6 98 20 C84 26 70 22 58 26 C44 30 32 24 22 18 Z" fill="#b98a66" opacity="0.7"/>
+                <path d="M74 50 C80 42 93 44 95 55 C97 66 86 76 76 88 C66 79 55 72 54 62 C53 52 66 46 74 50 Z" fill="#efe3d3"/>
+                <path d="M74 50 C70 58 70 68 76 88 C66 79 55 72 54 62 C53 52 66 46 74 50 Z" fill="#fbf5ec" opacity="0.55"/>
+                <circle cx="34" cy="44" r="4" fill="#a67d5c" opacity="0.6"/>
+                <circle cx="48" cy="34" r="2.2" fill="#a67d5c" opacity="0.5"/>
+                <circle cx="40" cy="98" r="3" fill="#a67d5c" opacity="0.5"/>
+                <circle cx="92" cy="86" r="2.4" fill="#a67d5c" opacity="0.45"/>
+                <circle cx="60" cy="60" r="52" fill="url(#pluto-light)"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- Plataforma: suelo, torre de servicio con su indicador de combustible, vapor y humo. -->
+          <g id="site" transform="translate(184 -80)">
+            <g class="site-in">
+              <rect class="ground" id="ground" x="-184" y="359.5" width="368" height="1" fill="url(#ground-fade)"/>
+              <path class="flight-path orbit-dashed" d="M0 226 V84"/>
+
+              <g class="tower">
+                <g class="tower-arms">
+                  <rect x="14" y="272" width="45" height="3.5" rx="1"/>
+                  <rect x="18" y="306" width="41" height="3" rx="1"/>
+                </g>
+                <path class="tower-frame" d="M59 353 V226 H75 V353 M59 332 L75 311 L59 290 L75 269 L59 248 L75 226 M59 311 H75 M59 269 H75"/>
+                <path class="tower-frame" d="M67 226 V210"/>
+                <circle class="tower-beacon" cx="67" cy="208" r="2.2"/>
+                <rect class="fuel-track" x="82" y="236" width="5" height="114" rx="2.5"/>
+                <rect class="fuel-fill" x="82" y="236" width="5" height="114" rx="2.5"/>
+                <path class="fuel-marks" d="M90 236 h4 M90 264.5 h2.5 M90 293 h4 M90 321.5 h2.5 M90 350 h4"/>
+              </g>
+
+              <path class="pad" d="M-74 360 L-60 353 H60 L74 360 Z"/>
+              <path class="pad" d="M-31 353 V345 H-17 V353 Z M17 353 V345 H31 V353 Z"/>
+
+              <g class="vapor">
+                <circle cx="-20" cy="316" r="3.5"/>
+                <circle cx="-18" cy="294" r="3"/>
+                <circle cx="-22" cy="334" r="3"/>
+              </g>
+              <g class="smoke" id="smoke">
+                <circle cx="-6" cy="348" r="7"/><circle cx="6" cy="348" r="7"/>
+                <circle cx="-6" cy="348" r="7"/><circle cx="6" cy="348" r="7"/>
+                <circle cx="-6" cy="348" r="7"/><circle cx="6" cy="348" r="7"/>
+                <circle cx="-6" cy="348" r="7"/><circle cx="6" cy="348" r="7"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- Cohete compartido. Tres capas de transform: posición (JS), vuelo y vibración (WAAPI).
+               El recorte deja la llama por encima de la plataforma: no atraviesa el suelo. -->
+          <g clip-path="url(#above-pad)">
+            <g id="rocket-pos" transform="translate(184 264)">
+              <g id="rocket-fly">
+                <path class="trail" d="M-8 4 H8 L0 240 Z"/>
+                <g id="rocket-shake">
+                  <g class="rocket" id="rocket" data-flame="off" transform="scale(1.5) translate(-24 -68)">
+                    <g class="rocket-flame">
+                      <path class="flame-outer" d="M17 66 C17 78 21 86 24 94 C27 86 31 78 31 66 Z" fill="#ff7a3d"/>
+                      <path class="flame-inner" d="M20.5 66 C20.5 73 22.5 78 24 83 C25.5 78 27.5 73 27.5 66 Z" fill="#ffd9a8"/>
+                    </g>
+                    <path d="M14 46 L5 64 L5 69 L15 63 Z" fill="#c9a27e"/>
+                    <path d="M34 46 L43 64 L43 69 L33 63 Z" fill="#c9a27e"/>
+                    <path d="M18 62 H30 L28.5 68 H19.5 Z" fill="#8b949e"/>
+                    <path d="M24 3 C33 13 36 27 36 42 V60 C36 62 34.5 63 33 63 H15 C13.5 63 12 62 12 60 V42 C12 27 15 13 24 3 Z" fill="#f4f6f8"/>
+                    <path d="M24 3 C33 13 36 27 36 42 V60 C36 62 34.5 63 33 63 H27 V42 C27 26 26 13 24 3 Z" fill="#cfd6dd"/>
+                    <path d="M12 50 H36 V54 H12 Z" fill="#c9a27e"/>
+                    <circle cx="24" cy="31" r="6" fill="#161b22" stroke="#8b949e" stroke-width="1.5"/>
+                    <path d="M20.5 29.5 A4 4 0 0 1 24.5 27" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+
+        <div class="clock" id="clock" data-state="idle">
+          <p class="console" id="mission">misión <b>1 de 4</b></p>
+          <p class="clock-time mono" id="time" role="timer" aria-label="Faltan 25 min 0 s"><span class="clock-sign" id="time-sign">T−</span><span id="time-digits">25:00</span></p>
+        </div>
+
+        <p class="stage-hud stage-hud--bl console" id="hud">combustible: <b>0 %</b></p>
+        <p class="stage-hud stage-hud--br console" id="next">siguiente: <b>descanso · 5 min</b></p>
+      </section>
+
+      <section class="control panel" aria-label="Control de misión">
+        <div class="control-head">
+          <span class="console">control de misión</span>
+          <span class="control-leds" aria-hidden="true"><i></i><i></i><i></i></span>
+        </div>
+
+        <div class="actions" role="group" aria-label="Temporizador">
+          <button type="button" class="btn btn--accent action-main" id="toggle" aria-keyshortcuts="Space">
+            <svg class="icon icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.6 13 8l-8.5 5.4Z" fill="currentColor"/></svg>
+            <svg class="icon icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h3v11H4Zm5 0h3v11H9Z" fill="currentColor"/></svg>
+            <span id="toggle-label">Iniciar</span>
+          </button>
+          <button type="button" class="btn" id="reset" aria-label="Reiniciar la fase actual">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8a4.8 4.8 0 1 0 1.6-3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M2.4 2.2v3.4h3.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Reiniciar
+          </button>
+          <button type="button" class="btn" id="skip" aria-label="Saltar la fase: ir a su cuenta regresiva final">
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.2 9.4 8 3 12.8Z" fill="currentColor"/><path d="M12.2 3v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Saltar
+          </button>
+        </div>
+
+        <h2 class="sr-only">Estadísticas de hoy</h2>
+        <dl class="stats">
+          <div class="stat">
+            <dt>enfoques de hoy</dt>
+            <dd class="mono" id="stat-focuses">0</dd>
+          </div>
+          <div class="stat">
+            <dt>minutos de enfoque</dt>
+            <dd class="mono" id="stat-minutes">0</dd>
+          </div>
+          <div class="stat">
+            <dt>ciclo actual</dt>
+            <dd>
+              <span class="missions" id="missions" role="img" aria-label="0 de 4 misiones completadas"><i></i><i></i><i></i><i></i></span>
+            </dd>
+          </div>
+        </dl>
+
+        <fieldset class="config">
+          <legend class="console">ajustes</legend>
+          <div class="field">
+            <label for="cfg-focus">Enfoque <small>min</small></label>
+            <div class="stepper">
+              <button type="button" class="step" data-for="cfg-focus" data-step="-1" aria-label="Enfoque: un minuto menos">−</button>
+              <input class="mono" id="cfg-focus" data-key="focus" type="number" inputmode="numeric" min="1" max="90" step="1" value="25">
+              <button type="button" class="step" data-for="cfg-focus" data-step="1" aria-label="Enfoque: un minuto más">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="cfg-short">Descanso <small>min</small></label>
+            <div class="stepper">
+              <button type="button" class="step" data-for="cfg-short" data-step="-1" aria-label="Descanso: un minuto menos">−</button>
+              <input class="mono" id="cfg-short" data-key="short" type="number" inputmode="numeric" min="1" max="30" step="1" value="5">
+              <button type="button" class="step" data-for="cfg-short" data-step="1" aria-label="Descanso: un minuto más">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="cfg-long">Descanso largo <small>min</small></label>
+            <div class="stepper">
+              <button type="button" class="step" data-for="cfg-long" data-step="-1" aria-label="Descanso largo: un minuto menos">−</button>
+              <input class="mono" id="cfg-long" data-key="long" type="number" inputmode="numeric" min="1" max="60" step="1" value="15">
+              <button type="button" class="step" data-for="cfg-long" data-step="1" aria-label="Descanso largo: un minuto más">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <span id="sound-label">Sonido</span>
+            <button type="button" class="switch" id="sound" role="switch" aria-checked="false" aria-labelledby="sound-label">
+              <span class="switch-state mono" id="sound-state" aria-hidden="true">off</span>
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </button>
+          </div>
+          <p class="console config-note" id="config-note" hidden>la fase en curso no cambia · se aplica la próxima vez</p>
+        </fieldset>
+
+        <p class="control-hint console" id="hint">teclado: <b>Espacio</b> inicia y pausa</p>
+        <p class="sr-only" id="announce" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <footer class="page-foot">
+      <span>launch-pomodoro · serie Plutón</span>
+      <span>hecho por <a href="https://github.com/diegocedenno">diegocedenno</a> · MIT</span>
+    </footer>
+  </div>
+</body>
+</html>
