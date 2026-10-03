@@ -362,7 +362,8 @@
       svg.classList.toggle("is-retracted", finalCount || inStage || !onPad);
       svg.classList.toggle("is-venting", venting);
 
-      var fuel = !onPad || snap.mode === "liftoff" ? 1 : snap.mode === "idle" ? 0 : snap.progress;
+      // El depósito se llena con el enfoque y vuelve vacío del viaje.
+      var fuel = snap.mode === "liftoff" ? 1 : onPad && snap.mode === "timing" ? snap.progress : 0;
       if (Math.abs(fuel - lastFuel) >= 0.002 || (fuel === 0) !== (lastFuel === 0)) {
         lastFuel = fuel;
         svg.style.setProperty("--fuel", fuel.toFixed(4));
