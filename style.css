@@ -1,5 +1,14 @@
 /* launch-pomodoro — estilos propios. Los tokens y la base viven en assets/tokens.css */
 
+/* Cristal de la ventana del cohete: oscuro de noche; sobre papel, un azul pálido */
+:root {
+  --rocket-glass: #161b22;
+}
+
+:root[data-theme="light"] {
+  --rocket-glass: #dce8f6;
+}
+
 .layout {
   flex: 1;
   display: grid;
@@ -7,6 +16,36 @@
   grid-template-areas: "stage control";
   align-items: center;
   gap: var(--s-6);
+}
+
+/* ---------- marca ---------- */
+
+.brand-orbit {
+  stroke: var(--text-2);
+}
+
+.brand-flame {
+  fill: var(--alert);
+}
+
+.brand-fins {
+  fill: var(--accent);
+}
+
+/* Cohete blanco: en modo claro lo sostiene un contorno de tinta */
+.brand-rocket {
+  fill: var(--rocket);
+  stroke: var(--rocket-line);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.brand-window {
+  fill: var(--surface);
+}
+
+:root[data-theme="light"] .brand-window {
+  fill: var(--rocket-line);
 }
 
 /* ---------- escena ---------- */
@@ -48,6 +87,17 @@
   stroke: var(--border-strong);
 }
 
+/* Sombra del limbo de Plutón: se funde con el fondo en oscuro; sobre papel es
+   una sombra cálida y más leve. */
+.pluto-shade {
+  stop-color: #0d1117;
+}
+
+:root[data-theme="light"] .pluto-shade {
+  stop-color: #5b4330;
+  stop-opacity: 0.38;
+}
+
 /* La plataforma se queda abajo cuando la cámara sube con el cohete */
 .site-in {
   transition:
@@ -58,6 +108,10 @@
 .scene[data-view="orbit"] .site-in {
   transform: translateY(150px);
   opacity: 0;
+}
+
+.ground-stop {
+  stop-color: var(--border);
 }
 
 .flight-path {
@@ -170,12 +224,58 @@
   transform-origin: center;
 }
 
+/* Sobre papel el humo en tinta ensucia: pasa a un gris cálido, como polvo */
+:root[data-theme="light"] .smoke circle {
+  fill: var(--border-strong);
+}
+
 /* Estela: viaja con el cohete y se estira hacia abajo al acelerar */
 .trail {
   fill: var(--accent);
   opacity: 0;
   transform-box: fill-box;
   transform-origin: 50% 0;
+}
+
+/* Cohete: los colores van por clase para que sigan al tema. El blanco del cuerpo
+   se sostiene en modo claro con un contorno de tinta que no cambia de grosor
+   entre la plataforma y la órbita (donde el cohete se ve a la mitad). */
+.rocket-body {
+  fill: var(--rocket);
+}
+
+.rocket-shade {
+  fill: #cfd6dd;
+}
+
+.rocket-outline {
+  fill: none;
+  stroke: var(--rocket-line);
+  stroke-width: 1.25px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.rocket-fin,
+.rocket-band {
+  fill: var(--accent);
+}
+
+.rocket-nozzle {
+  fill: var(--text-2);
+}
+
+.rocket-window {
+  fill: var(--rocket-glass);
+  stroke: var(--text-2);
+}
+
+.rocket-glint {
+  stroke: var(--cold);
+}
+
+.flame-outer {
+  fill: var(--alert);
 }
 
 /* Llama: el grupo marca la intensidad; las dos capas parpadean por separado */
@@ -358,7 +458,7 @@
 }
 
 .btn:not(.btn--accent):hover {
-  background: #262e39;
+  background: var(--surface-3);
 }
 
 .btn[aria-disabled="true"] {
